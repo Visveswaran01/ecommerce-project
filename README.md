@@ -9,6 +9,9 @@ Learning Django through building simple e-commerce website
 ![Screenshot (105)](https://github.com/Visveswaran01/ecommerce-project/assets/87256868/973f2eee-8049-4342-b1bf-d077326585cc)
 
 
+![Screenshot (109)](https://github.com/Visveswaran01/ecommerce-project/assets/87256868/a012c92c-7938-4d62-b167-b39ccde316d6)
+
+
 ![Screenshot (106)](https://github.com/Visveswaran01/ecommerce-project/assets/87256868/b79f9285-feb3-42a6-abe9-77df38a52d87)
 
 
