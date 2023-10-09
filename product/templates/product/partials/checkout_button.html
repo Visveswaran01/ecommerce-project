@@ -1,0 +1,5 @@
+{% if cart.get_products_purchased != 0 %}
+    <a class="btn btn-success rounded-2 p-2" href="{% url 'checkout' %}">&nbsp; Checkout &nbsp; &#x2192;</a>
+{% else %}
+    <a class="btn btn-success rounded-2 p-2 disabled">&nbsp; Checkout &nbsp; &#x2192;</a>
+{% endif %}

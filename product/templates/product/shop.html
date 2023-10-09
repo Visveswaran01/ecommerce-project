@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <style>
+        .catlist li
+        {
+            list-style-type: none;
+            background-color: sienna;
+        }
+
+        .catlist li a
+        {
+            text-decoration: none;
+            color: whitesmoke;
+        }
+
+        .catlist li a:active
+        {
+            color: aqua;
+        }
+        
+    </style>
+
+    <div class="container-fluid">
+
+        <!-- <div class="row">
+            <div class="col-12 alert alert-warning p-0 rounded-0 bg-warning bg-opacity-75" role="alert">
+                <p class="fs-5 px-3 pt-2 fw-semibold"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </svg> &nbsp;
+                    Please visit cart page to <u><i>increase / decrease</i></u> quantity of the product present in Cart 
+                </p>
+              </div>
+        </div> -->
+
+        <div class="row">
+            <div class="col-3 mt-5">
+                <p class="fs-6 fw-bolder my-1">SEARCH</p>
+                <form class="d-flex" role="search">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-success" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+                <ul class="catlist list-group mt-5">
+                    <li class="list-group-item bg-secondary text-warning" style="font-family: cursive;" aria-current="true">CATEGORIES</li>
+                    {% for category in categories %}
+                    <li class="list-group-item"><a href="{% url 'shop' %}?category={{category.slug}}">{{category.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+
+            <div class="col-8 mt-5 mx-5">
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-4 mb-3">
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{ product.img }}" class="card-img-top" alt="..." style="height: 10.75rem;">
+                            
+                            <div class="card-body">
+                                    <h5 class="card-title py-1">{{ product.name }}</h5>
+                                    <h5 class="py-1 mb-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                            <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"/>
+                                        </svg>{{ product.price|floatformat:2 }}
+                                    </h5>
+                                    
+                                    <a
+                                        href="{% url 'viewproduct' product.id %}"
+                                        class="btn btn-outline-success w-100 fs-6" >
+                                        View
+                                    </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock content%}

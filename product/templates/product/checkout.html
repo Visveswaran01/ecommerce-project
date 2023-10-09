@@ -1,0 +1,231 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+
+
+    th,td
+    {
+        padding: 0.5rem;
+    }
+
+    td
+    {
+        text-align: right;
+        color: rgb(13, 139, 97);
+    }
+    .usd input
+    {
+        background-color: lightgrey;
+        padding: 10px;
+        height: 2.75rem;
+        border: none;
+        cursor:not-allowed;
+    }
+    .flex-container {
+    flex-wrap: wrap;
+    }
+</style>
+
+    {% csrf_token %}    
+
+    <div class="container my-5">
+
+        <div class="row g-5">
+
+        <div class="col-8">
+
+                <p class="fs-3 mx-1" style="font-family: cursive;">CHECKOUT</p>
+
+                <!-- USER INFO -->
+                <div class="bg-info bg-opacity-25 my-3 mx-1 rounded-2">
+                    <h5 class="p-3 m-0">1. USER INFORMATION <hr class="my-2"></h5>
+
+                    <div class="p-3 pt-0 d-flex justify-content-between align-items-center usd">
+                        <div>
+                            <p class="fw-semibold m-0 mb-1">FIRST NAME</p>
+                            <input type="text" class="rounded-2 " value="{{request.user.fname}}" disabled>
+                        </div>
+                        
+                        <div>
+                            <p class="fw-semibold m-0 mb-1">LAST NAME</p>
+                            <input type="text" class="rounded-2 " value="{{request.user.lname}}" disabled>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Shipping Details -->
+                <div class="bg-danger bg-opacity-50 my-5 mx-1 rounded-2">
+
+                    <h5 class="p-3 m-0">2. SHIPPING DETAILS <hr class="my-2"></h5>
+                
+                        <div class="d-flex flex-wrap m-0">
+                            <div class="input-group">
+                                <div class="col-6 p-3 pt-2">
+                                    <input type="tel" name="phoneNo" id="" placeholder="Mobile Number" class="form-control">
+                                </div>
+                                <div class="col-6 p-3 pt-2">
+                                    <input type="text" name="city" id="" placeholder="City" class="form-control">
+                                </div>
+                                <div class="col-6 p-3">
+                                    <input type="text" name="state" id="" placeholder="State" class="form-control">
+                                </div>
+                                <div class="col-6 p-3">
+                                    <input type="text" name="postal_code" id="" placeholder="Postal Code" class="form-control">
+                                </div>
+        
+                                <div class="col-12 p-3">
+                                    <textarea name="address" id="" cols="40" rows="4" placeholder="Delivery Address" class="form-control"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+
+                
+                
+        </div>
+
+        <div class="col-4">
+            <div class="bg-secondary bg-opacity-10 rounded-2 border border-info mx-2 mt-1">
+                <h4 class="m-2 px-3 py-1 text-center">Summary</h4>
+                <hr class="m-0">
+                <table class="w-100">
+                    <tr>
+                        <th>Product</th>
+                        <td><strong> {{cart.get_products_purchased}} </strong></td>
+                    </tr>
+                    <tr>
+                        <th>Quantity</th>
+                        <td><strong>{{cart|length}}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Shipping & Handling</th>
+                        <td class="fw-semibold" style="color: orangered;"> <strong>FREE</strong> </td>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td>
+                            <strong>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"/>
+                                    </svg>{{ cart.get_total_cost }}
+                            </strong>
+
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="w-90 m-3">
+                    <button type="submit" 
+                            class="w-100 fs-6 p-2 fw-bold btn btn-warning text-dark"
+                            onclick="buy(event)"
+                    >
+                    Confirm Checkout
+                    </button>
+                </div>
+                
+            </div>
+            
+        </div>
+        </div>
+    </div>
+
+
+{% block script %} 
+
+<script type="application/javascript" src="https://js.stripe.com/v3/">
+</script>
+
+<script>
+
+    function validateForm(data) {
+        let errors = []
+
+        if (data.phone === '' || data.phone.length != 10) {
+            errors.push('Invalid Phone Number')
+        }
+
+        if (data.address === '') {
+            errors.push('Invalid Address')
+        }
+
+        if (data.zipcode === '') {
+            errors.push('Invalid Zipcode')
+        }
+
+        if (data.state === '') {
+            errors.push('State is empty')
+        }
+
+        if (data.city === '') {
+            errors.push('city is empty')
+        }
+
+        if (errors.length > 0) {
+    
+            alert("Please check whether you have filled the shipping details form correctly");
+        } 
+
+        return errors
+    }
+
+    function buy(event) {
+
+        event.preventDefault()
+
+        let data = {
+            'phone': document.querySelector('input[name=phoneNo]').value,
+            'address': document.querySelector('textarea[name=address]').value,
+            'zipcode': document.querySelector('input[name=postal_code]').value,
+            'state': document.querySelector('input[name=state]').value,
+            'city': document.querySelector('input[name=city]').value,
+        }
+
+        let errors = validateForm(data)
+
+        if (errors.length) {
+            console.log('Errors', errors)
+        } 
+        else 
+        {
+            var stripe = Stripe('{{ pub_key }}')
+
+            fetch('process_order', 
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                return response.json()
+            })
+            .then(function(session) {
+                return stripe.redirectToCheckout({ sessionId: session.session.id })
+            })
+            .then(function(result) {
+                if (result.error) {
+                    alert(result.error.message)
+                }
+            })
+            .catch(function(error) {
+                console.log('Errors', error)
+            })
+        }
+
+        return false
+    } 
+    </script>
+    {% endblock script%}
+
+{% endblock %}
+
+

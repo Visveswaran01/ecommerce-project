@@ -1,0 +1,52 @@
+{% load static %}
+
+{% if item.quantity != 0 %}
+    <tr class="table-active" id="cart-item-{{ item.product.id }}">
+
+            <td><img src="{{item.product.img}}" alt="..." style="width: 50px; height: 50px;"></td>
+            <td>{{item.product.name}}</td>
+            <td>{{item.product.price}}</td>
+            <td>
+
+                <table class = "mx-auto">
+                    <tr>
+                        <td>
+                            {{item.quantity}}
+                        </td>
+                        <td class="px-3">
+
+                            <div>
+                                <a 
+                                    hx-get = "{% url 'update_cart' item.pid 'increment' %}"
+                                    hx-target="#cart-item-{{ item.product.id }}"
+                                    hx-swap = "outerHTML"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-caret-up-square-fill" viewBox="0 0 16 16">
+                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4 9h8a.5.5 0 0 0 .374-.832l-4-4.5a.5.5 0 0 0-.748 0l-4 4.5A.5.5 0 0 0 4 11z"/>
+                                    </svg>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a 
+                                    hx-get ="{% url 'update_cart' item.pid 'decrement' %}"
+                                    hx-target="#cart-item-{{ item.product.id }}"
+                                    hx-swap = "outerHTML"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-caret-down-square-fill" viewBox="0 0 16 16">
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6H4z"/>
+                                    </svg>
+                                </a>
+                            </div>
+
+                        </td>
+                    </tr>
+                        
+                </table>
+            </td>
+
+        <td>{{item.total_price}}</td>
+        
+    </tr>
+{% endif %}
+

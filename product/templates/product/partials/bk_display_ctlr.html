@@ -1,0 +1,42 @@
+{% if cart.get_products_purchased != 0 %}
+
+    <style>
+        .carttable > table > th,td
+        {
+            vertical-align: middle;
+            text-align: center;
+            font-family: cursive;
+            font-size: 1.125rem;
+        }
+        
+    </style>
+
+    <div class=" row carttable">
+        <table class="col table table-bordered border-light-subtle m-3 text-white" data-bs-theme="dark">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Price</th>
+                </tr>
+            </thead>
+                <tbody class="">
+                    {% for item in cart %}
+                        {% include 'product/partials/display_bkItems.html' %}
+                    {% endfor %}
+                </tbody>
+        </table>
+    </div>
+
+{% else %}
+
+    <div class="row rounded-3 m-0 text-danger border border-primary fw-bolder bg-info text-center p-3 bg-opacity-10">
+        <div class="col">
+            <p>Your Cart is Empty</p>
+            <p>Visit the shop to add product to cart</p>
+        </div>
+    </div>
+
+{% endif %}

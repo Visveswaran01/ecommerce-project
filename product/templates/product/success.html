@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="alert alert-success mx-auto my-3" role="alert">
+        <p>Your order has been placed cuccessfully.</p>
+        <p>Thanks for making the purchase!!!</p>
+        <a href="{% url 'home' %}">Go to Home</a>
+    </div>
+</div>
+
+{% endblock %}

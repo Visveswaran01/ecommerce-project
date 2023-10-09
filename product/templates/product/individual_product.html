@@ -1,0 +1,273 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .rating,.rating1 {
+        font-size: 2.25rem;
+        cursor: pointer;
+    }
+
+    .star,.star1 {
+        color: #ccc;
+        transition: color 0.3s;
+    }
+
+    .star:hover,
+    .star.clicked , 
+    .star1.clicked {
+        color: #FFD700; /* Change to your desired star color */
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 alert alert-warning p-0 rounded-0 bg-warning bg-opacity-75" role="alert">
+            <p class="fs-5 px-3 pt-2 fw-semibold"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                </svg> &nbsp;
+                Please visit cart page to <u><i>increase / decrease</i></u> quantity of the product present in Cart 
+            </p>
+          </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row my-3">
+        <div class="col-6 my-3">
+                <img src="{{ item.img.url }}" alt=""  class="rounded-2 border border-secondary-10 p-3" width="400px" height="400px">
+        </div>
+
+        <div class="col-6">
+
+            <p class="fs-3 py-1 my-1">
+                {{item.name}}
+            </p>
+
+            <div class="p-0 mt-0"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
+                    <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"/>
+                </svg> 
+                <span style="vertical-align: middle;" class="fs-4">{{ item.price|floatformat:2 }}</span>
+            </div>
+
+            <div class="rating pt-0 mt-1" hx-get="highlightStars1()">
+                <span class="star1" data-rating="1">&#9733;</span>
+                <span class="star1" data-rating="2">&#9733;</span>
+                <span class="star1" data-rating="3">&#9733;</span>
+                <span class="star1" data-rating="4">&#9733;</span>
+                <span class="star1" data-rating="5">&#9733;</span>
+                <input type="hidden" name="rating1" id="rating1" value={{item.get_rating}}>
+            </div>
+
+            <div class="mt-4 fs-5">
+                <button 
+                    class="btn btn-secondary  mx-1 bg-opacity-75 bg-gradient px-5" 
+                    hx-get="{% url 'add_to_cart' item.id %}"
+                    hx-target="#menu-cart-counter"
+                >
+                    Add to Cart
+                </button>
+           
+                <button 
+                    class="btn btn-danger bg-opacity-75 bg-gradient mx-1 px-3 float-end" 
+                    hx-get="{% url 'remove_from_cart' item.id %}"
+                    hx-target="#menu-cart-counter"
+                >
+                    Remove from Cart
+                </button>
+
+            </div>
+
+            <p class="mt-4"><b>Category : </b> <span>{{item.category.name}}</span></p>
+
+            {% if item.description %}
+                <div class="mt-3">
+                    <p class="mb-1"><b>Description</b></p>
+                    {{item.description|linebreaksbr }}
+                </div>
+            {% endif %}
+
+            <div class="mb-4"></div>
+            
+        </div>
+    </div>
+
+    <!-- <div class="row my-5 justify-content-between">
+
+        <div class="col p-2 rounded-2 bg-dark bg-opacity">
+            <form method="post" action="">
+                {% csrf_token %}
+                <div>
+                    <h4 class="text-center text-primary mt-2"> Please Share your thoughts</h4>
+                    <div class="rating text-center pt-2 mb-4">
+                        <span class="star" data-rating="1">&#9733;</span>
+                        <span class="star" data-rating="2">&#9733;</span>
+                        <span class="star" data-rating="3">&#9733;</span>
+                        <span class="star" data-rating="4">&#9733;</span>
+                        <span class="star" data-rating="5">&#9733;</span>
+                        <input type="hidden" name="rating" id="rating" value="0">
+                    </div>
+                    
+                    <textarea name="comment" id="" rows="4" class="form-control" placeholder="comment on on this product"></textarea>
+                </div>
+                <div class="mt-5 mb-3">
+                    <input type="reset" value="Clear" class="btn btn-danger px-5" onclick="clearRating()">
+                    <input type="submit" value="Submit" class="btn btn-success float-end px-5">
+                </div>
+            </form>
+        </div>
+    </div> -->
+
+    <div class="row my-3">
+        <div class="col p-3 bg-dark bg-opacity-10 bg-gradient">
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="fs-4" style="vertical-align: middle;">What people have said about this product!</p>
+                <a class="btn btn-primary px-1" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-vector-pen" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10.646.646a.5.5 0 0 1 .708 0l4 4a.5.5 0 0 1 0 .708l-1.902 1.902-.829 3.313a1.5 1.5 0 0 1-1.024 1.073L1.254 14.746 4.358 4.4A1.5 1.5 0 0 1 5.43 3.377l3.313-.828L10.646.646zm-1.8 2.908-3.173.793a.5.5 0 0 0-.358.342l-2.57 8.565 8.567-2.57a.5.5 0 0 0 .34-.357l.794-3.174-3.6-3.6z"/>
+                        <path fill-rule="evenodd" d="M2.832 13.228 8 9a1 1 0 1 0-1-1l-4.228 5.168-.026.086.086-.026z"/>
+                      </svg> &nbsp; Write a review
+                </a>
+            </div>
+            
+            {% for review in item.reviews.all %}
+                <div class="rounded-3 p-2 bg-light bg-gradient mt-3">
+                    <p class="fs-5 m-1" style="font-family:Arial, Helvetica, sans-serif;"> <b>{{review.user.fname}} {{review.user.lname}}</b> rated {{review.rating}} out of 5 
+                        <span class="fs-6" style="color:gray">
+                            {%if review.comment %}
+                                and says
+                            {% endif %}
+                        </span>
+                    </p>
+                    {%if review.comment %}
+                        <p class="mx-1"> {{review.comment | linebreaksbr}} </p>
+                    {% endif %}
+                    
+                </div>
+
+            {% endfor %}
+        </div>
+
+    </div>
+    
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div>
+                        <button type="button" class="btn-close d-flex float-end" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h4 class="text-center text-primary mt-2"> Please Share your thoughts</h4>
+                        <div class="rating text-center pt-2 mb-4">
+                            <span class="star" data-rating="1">&#9733;</span>
+                            <span class="star" data-rating="2">&#9733;</span>
+                            <span class="star" data-rating="3">&#9733;</span>
+                            <span class="star" data-rating="4">&#9733;</span>
+                            <span class="star" data-rating="5">&#9733;</span>
+                            <input type="hidden" name="rating" id="rating" value="0">
+                        </div>
+                        <textarea name="comment" id="" rows="4" class="form-control" placeholder="Comment on this product"></textarea>
+                    </div>
+                    <div class="mt-5 mb-3">
+                        <input type="reset" value="Clear" class="btn btn-danger px-5" onclick="clearRating()">
+                        <input type="submit" value="Submit" class="btn btn-success float-end px-5">
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+</div>
+
+<script>
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating');
+    var clicked = false;
+
+    stars.forEach((star) => {
+        star.addEventListener('mouseover', () => {
+            const rating = star.getAttribute('data-rating');
+            highlightStars(rating,clicked);
+        });
+
+        star.addEventListener('mouseout', () => {
+                const currentRating = ratingInput.value;
+                unhighlightStars(currentRating,clicked);
+         });
+
+
+        star.addEventListener('click', () => {
+            const rating = star.getAttribute('data-rating');
+            ratingInput.value = rating;
+            clicked = true;
+            highlightStars(rating, true);
+        });
+    });
+
+    function highlightStars(rating, isClicked = false) {
+
+        stars.forEach((star) => {
+            const starRating = star.getAttribute('data-rating');
+            if (starRating <= rating) {
+                star.classList.add('clicked');
+            } else {
+                star.classList.remove('clicked');
+            }
+        });
+
+        if (!isClicked) {
+            ratingInput.value = rating;
+        }
+    }
+
+    function unhighlightStars(rating,isClicked = false) 
+    {
+        if (clicked)
+        {
+            stars.forEach((star) => {
+            const starRating = star.getAttribute('data-rating');
+            console.log(rating);
+            if (starRating <= rating) 
+                star.classList.add('clicked');
+            else
+                star.classList.remove('clicked');
+            });
+        }
+        else
+            clearRating();
+            
+    }
+
+    function clearRating()
+    {
+        stars.forEach((star) => {
+            const starRating = star.getAttribute('data-rating');
+            star.classList.remove('clicked');
+            ratingInput.value = 0;
+        });
+    }
+
+    const stars1 = document.querySelectorAll('.star1');
+    const rating1 = document.getElementById('rating1').value;
+
+    console.log(rating1);
+    console.log(stars1);
+
+    stars1.forEach((star) => {
+        const starRating = star.getAttribute('data-rating');
+        if (starRating <= rating1) {
+            star.classList.add('clicked');
+        } else {
+            star.classList.remove('clicked');
+        }
+    });
+    
+
+</script>
+
+{% endblock content%}

@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+    {% block content %}
+
+    <style>
+        .wcbanner
+        {
+            background-color: rgb(132, 93, 167);
+            height: 73vh;
+        }
+
+        .wcbanner p
+        {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-family: cursive;
+            color: whitesmoke;
+        }
+
+        .wcbanner a:active,.wcbanner a:hover
+        {
+            color:blueviolet;
+        }
+
+    </style>
+
+    
+            <div class="p-5 m-0 text-center wcbanner">
+        
+                <p class="py-3 px-2 fw-normal fs-1">Welcome to Happy Home</p>
+                
+                <p class="p-3 fs-5 fw-light">We sell furnitues for the modern home</p>
+        
+                <a href="{% url 'shop' %}" class="btn btn-outline-light m-4 p-3 fs-5"> Start Shopping </a>
+        
+            </div>
+       
+
+    <!-- Complete the code for displaying products -->
+
+    {% endblock %}
+
+
+</html>
+

@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .summary
+        {
+            height:3rem;
+        }
+    </style>
+
+    <div class="container mx-auto my-4 bg-secondary p-2 bg-opacity-10 rounded-3">
+        <div class="row m-3">
+            <div class="d-flex justify-content-between summary align-items-center">
+                <a  class="btn btn-dark" href="{% url 'shop' %}">&#x2190; Continue Shopping</a>
+
+                <div
+                    hx-get="{% url 'hx_cart_total' %}"
+                    hx-trigger="update-menu-cart from:body"
+                    hx-swap="innerHTML"
+                >
+                    {% include 'product/partials/bk_cost.html' %}
+                </div>
+
+                <div
+                    hx-get="{% url 'hx_checkout_btn' %}"
+                    hx-trigger="update-menu-cart from:body"
+                    hx-swap="innerHTML"
+                >
+                    {% include 'product/partials/checkout_button.html' %}
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto my-4 p-0"
+          hx-get="{% url 'hx_cart_product' %}"
+          hx-trigger="update-menu-cart from:body"
+          hx-swap="innerHTML">
+
+        {% include 'product/partials/bk_display_ctlr.html' %}
+        
+    </div>
+
+    
+{% endblock content%}
