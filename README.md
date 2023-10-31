@@ -1,4 +1,4 @@
-# ecommerce-project
+# Ecommerce-project
 
 Learning Django through building simple e-commerce website  
 
